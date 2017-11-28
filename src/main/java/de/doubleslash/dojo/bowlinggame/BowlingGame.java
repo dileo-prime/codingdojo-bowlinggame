@@ -18,7 +18,7 @@ public class BowlingGame implements PinGame {
         rollsOfCurrentFrame.add(roll);
 
         if (notInTenthFrame()) {
-            if (roll.isStrike() || rollsOfCurrentFrame.size() == 2) {
+            if (standardFrameIsFinished(roll)) {
                 frames.add(new Frame(rollsOfCurrentFrame));
                 rollsOfCurrentFrame.clear();
             }
@@ -29,20 +29,24 @@ public class BowlingGame implements PinGame {
         }
     }
 
+    private boolean standardFrameIsFinished(Roll roll) {
+        return roll.isStrike() || rollsOfCurrentFrame.size() == 2;
+    }
+
+    private boolean notInTenthFrame() {
+        return frames.size() < 9;
+    }
+
     private boolean tenthFrameIsFinished() {
-        return tenthFrameFinishedWithTwoRollsWithoutStrikeOrSpare() || lastFrameFinishedAfterThreeRolls();
+        return tenthFrameFinishedWithTwoRollsWithoutStrikeOrSpare() || tenthFrameFinishedAfterThreeRolls();
     }
 
     private boolean tenthFrameFinishedWithTwoRollsWithoutStrikeOrSpare() {
         return rollsOfCurrentFrame.size() == 2 && sumOfRolls(rollsOfCurrentFrame) < 10;
     }
 
-    private boolean lastFrameFinishedAfterThreeRolls() {
+    private boolean tenthFrameFinishedAfterThreeRolls() {
         return rollsOfCurrentFrame.size() == 3;
-    }
-
-    private boolean notInTenthFrame() {
-        return frames.size() < 9;
     }
 
     public int score() {
