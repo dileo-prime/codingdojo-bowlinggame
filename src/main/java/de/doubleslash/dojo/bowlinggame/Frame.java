@@ -1,36 +1,27 @@
 package de.doubleslash.dojo.bowlinggame;
 
-public class Frame {
+import java.util.ArrayList;
+import java.util.List;
 
-  private int firstRoll;
 
-  private int secondRoll;
+class Frame {
 
-  public int getFirstRoll() {
-    return firstRoll;
-  }
+    private List<Roll> rolls;
 
-  public void setFirstRoll(int firstRoll) {
-    this.firstRoll = firstRoll;
-  }
+    Frame(List<Roll> rollsOfCurrentFrame) {
+        this.rolls = new ArrayList<>(rollsOfCurrentFrame);
+    }
 
-  public int getSecondRoll() {
-    return secondRoll;
-  }
+    boolean isStrike() {
+        return rolls.size() == 1 && rolls.get(0).getPins() == 10;
+    }
 
-  public void setSecondRoll(int secondRoll) {
-    this.secondRoll = secondRoll;
-  }
+    boolean isSpare() {
+        return this.rolls.stream().mapToInt(Roll::getPins).sum() == 10 && !isStrike();
+    }
 
-  public boolean isSpare() {
-    return (firstRoll + secondRoll == 10) && !isStrike();
-  }
+    List<Roll> getRolls() {
+        return rolls;
+    }
 
-  public int getSum() {
-    return firstRoll + secondRoll;
-  }
-
-  public boolean isStrike() {
-    return firstRoll == 10;
-  }
 }

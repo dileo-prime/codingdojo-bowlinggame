@@ -3,48 +3,93 @@ package de.doubleslash.dojo.bowlinggame;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 public class BowlingGame implements PinGame {
 
-  private int rollCounter =0;
-  private List<Frame> frames = new ArrayList<Frame>();
+    private RollCounter rollCounter = new RollCounter();
 
-  public void roll(final int pins) {
+    private List<Frame> frames = new ArrayList<>();
 
-    // If even
-    if(rollCounter%2==0){
-      // if strike
-      if (pins == 10){
-        rollCounter++;
-      }
-      Frame frame = new Frame();
-      frame.setFirstRoll(pins);
-      frames.add(frame);
-    }else{
-      frames.get(rollCounter/2).setSecondRoll(pins);
+    private List<Roll> rollsOfCurrentFrame = new ArrayList<>();
+
+    public void roll(int pins) {
+        Roll roll = new Roll(pins, rollCounter.getNext());
+        rollsOfCurrentFrame.add(roll);
+
+        if (notInTenthFrame()) {
+            if (roll.isStrike() || rollsOfCurrentFrame.size() == 2) {
+                frames.add(new Frame(rollsOfCurrentFrame));
+                rollsOfCurrentFrame.clear();
+            }
+        } else {
+            if (tenthFrameIsFinished()) {
+                frames.add(new Frame(rollsOfCurrentFrame));
+            }
+        }
     }
 
-    rollCounter++;
-  }
-
-  public int score() {
-    int score = 0;
-
-
-    for (int i = 0; i < frames.size(); i++) {
-
-      final Frame currentFrame = frames.get(i);
-      score += currentFrame.getSum();
-
-      // Spare
-      if(currentFrame.isSpare() && i < frames.size() - 1) {
-        score += frames.get(i+1).getFirstRoll();
-      }
-      if(currentFrame.isStrike() && i < frames.size() - 1) {
-        score += frames.get(i+1).getFirstRoll();
-        score += frames.get(i+1).getSecondRoll();
-      }
+    private boolean tenthFrameIsFinished() {
+        return tenthFrameFinishedWithTwoRollsWithoutStrikeOrSpare() || lastFrameFinishedAfterThreeRolls();
     }
 
-    return score != 80 ? score : 87;
-  }
+    private boolean tenthFrameFinishedWithTwoRollsWithoutStrikeOrSpare() {
+        return rollsOfCurrentFrame.size() == 2 && sumOfRolls(rollsOfCurrentFrame) < 10;
+    }
+
+    private boolean lastFrameFinishedAfterThreeRolls() {
+        return rollsOfCurrentFrame.size() == 3;
+    }
+
+    private boolean notInTenthFrame() {
+        return frames.size() < 9;
+    }
+
+    public int score() {
+        int score = 0;
+        List<Roll> allRolls = frames.stream()
+                .flatMap(f -> f.getRolls()
+                        .stream())
+                .collect(toList());
+
+        score += sumOfRolls(allRolls);
+
+        for (Frame frame : frames) {
+            if (frame.isSpare() || frame.isStrike()) {
+                score += getScoreOfNextRoll(frame, allRolls);
+            }
+            if (frame.isStrike()) {
+                score += getScoreOfOvernextRoll(frame, allRolls);
+            }
+        }
+
+        return score;
+    }
+
+    private int sumOfRolls(List<Roll> rolls) {
+        return rolls.stream()
+                .mapToInt(Roll::getPins)
+                .sum();
+    }
+
+    private int getScoreOfNextRoll(Frame frame, List<Roll> allRolls) {
+        return getScoreOfNthRollAfterFrame(frame, allRolls, 1);
+    }
+
+    private int getScoreOfOvernextRoll(Frame frame, List<Roll> allRolls) {
+        return getScoreOfNthRollAfterFrame(frame, allRolls, 2);
+    }
+
+    private int getScoreOfNthRollAfterFrame(Frame frame, List<Roll> allRolls, int n) {
+        List<Roll> rollsOfFrame = frame.getRolls();
+        Roll lastRollOfFrame = rollsOfFrame.get(rollsOfFrame.size() - 1);
+        int indexOfNextRoll = allRolls.indexOf(lastRollOfFrame) + n;
+        if (indexOfNextRoll < allRolls.size()) {
+            return allRolls.get(indexOfNextRoll)
+                    .getPins();
+        }
+
+        return 0;
+    }
+
 }
