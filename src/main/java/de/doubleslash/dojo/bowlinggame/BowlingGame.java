@@ -84,12 +84,8 @@ public class BowlingGame implements PinGame {
         List<Roll> rollsOfFrame = frame.getRolls();
         Roll lastRollOfFrame = rollsOfFrame.get(rollsOfFrame.size() - 1);
         int indexOfNextRoll = allRolls.indexOf(lastRollOfFrame) + n;
-        if (indexOfNextRoll < allRolls.size()) {
-            return allRolls.get(indexOfNextRoll)
-                    .getPins();
-        }
 
-        return 0;
+        return allRolls.get(indexOfNextRoll).getPins();
     }
 
 }

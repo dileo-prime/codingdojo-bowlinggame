@@ -25,4 +25,10 @@ public class RollTest {
         assertThat(new Roll(1, 1), not(equalTo(new Roll(1, 2))));
     }
 
+    @Test
+    public void testToString() throws Exception {
+        Roll roll = new Roll(9, 3);
+        assertThat(roll.toString(), is(equalTo("Roll{" + "rollNumber=3, pins=9}")));
+    }
+
 }
