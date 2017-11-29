@@ -59,7 +59,7 @@ public class BowlingGame implements PinGame {
 
         for (Frame frame : frames) {
             if (frame.isSpare() || frame.isStrike()) {
-                score += getScoreOfNextRoll(frame, allRolls);
+                score += scoreOfNextRoll(frame, allRolls);
             }
             if (frame.isStrike()) {
                 score += getScoreOfOvernextRoll(frame, allRolls);
@@ -75,16 +75,16 @@ public class BowlingGame implements PinGame {
                 .sum();
     }
 
-    private int getScoreOfNextRoll(Frame frame, List<Roll> allRolls) {
-        return getScoreOfNthRollAfterFrame(frame, allRolls, 1);
+    private int scoreOfNextRoll(Frame currentFrame, List<Roll> allRolls) {
+        return getScoreOfNthRollAfterFrame(currentFrame, allRolls, 1);
     }
 
-    private int getScoreOfOvernextRoll(Frame frame, List<Roll> allRolls) {
-        return getScoreOfNthRollAfterFrame(frame, allRolls, 2);
+    private int getScoreOfOvernextRoll(Frame currentFrame, List<Roll> allRolls) {
+        return getScoreOfNthRollAfterFrame(currentFrame, allRolls, 2);
     }
 
-    private int getScoreOfNthRollAfterFrame(Frame frame, List<Roll> allRolls, int n) {
-        List<Roll> rollsOfFrame = frame.getRolls();
+    private int getScoreOfNthRollAfterFrame(Frame currentFrame, List<Roll> allRolls, int n) {
+        List<Roll> rollsOfFrame = currentFrame.getRolls();
         Roll lastRollOfFrame = rollsOfFrame.get(rollsOfFrame.size() - 1);
         int indexOfNextRoll = allRolls.indexOf(lastRollOfFrame) + n;
 
