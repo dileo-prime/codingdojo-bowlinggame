@@ -29,19 +29,19 @@ public class BowlingGame implements PinGame {
         }
     }
 
-    private boolean standardFrameIsFinished(Roll roll) {
-        return roll.isStrike() || rollsOfCurrentFrame.size() == 2;
-    }
-
     private boolean notInTenthFrame() {
         return frames.size() < 9;
     }
 
-    private boolean tenthFrameIsFinished() {
-        return tenthFrameFinishedWithTwoRollsWithoutStrikeOrSpare() || tenthFrameFinishedAfterThreeRolls();
+    private boolean standardFrameIsFinished(Roll roll) {
+        return roll.isStrike() || rollsOfCurrentFrame.size() == 2;
     }
 
-    private boolean tenthFrameFinishedWithTwoRollsWithoutStrikeOrSpare() {
+    private boolean tenthFrameIsFinished() {
+        return tenthFrameFinishedAfterTwoRolls() || tenthFrameFinishedAfterThreeRolls();
+    }
+
+    private boolean tenthFrameFinishedAfterTwoRolls() {
         return rollsOfCurrentFrame.size() == 2 && sumOfRolls(rollsOfCurrentFrame) < 10;
     }
 
@@ -52,8 +52,7 @@ public class BowlingGame implements PinGame {
     public int score() {
         int score = 0;
         List<Roll> allRolls = frames.stream()
-                .flatMap(f -> f.getRolls()
-                        .stream())
+                .flatMap(f -> f.getRolls().stream())
                 .collect(toList());
 
         score += sumOfRolls(allRolls);
