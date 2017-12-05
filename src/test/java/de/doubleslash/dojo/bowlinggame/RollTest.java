@@ -29,7 +29,7 @@ public class RollTest {
     @Test
     public void testToString() {
         Roll roll = new Roll(9, 3);
-        assertThat(roll.toString(), is(equalTo("Roll{" + "rollNumber=3, pins=9}")));
+        assertThat(roll.toString(), is(equalTo("Roll{rollNumber=3, pins=9}")));
     }
 
 }
