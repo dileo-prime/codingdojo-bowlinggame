@@ -1,5 +1,7 @@
 package de.doubleslash.dojo.bowlinggame;
 
+import java.util.Objects;
+
 public class Roll {
 
     private int rollNumber;
@@ -20,6 +22,24 @@ public class Roll {
 
     boolean isStrike() {
         return pins == 10;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Roll roll = (Roll) o;
+        return rollNumber == roll.rollNumber && pins == roll.pins;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(rollNumber, pins);
     }
 
     @Override

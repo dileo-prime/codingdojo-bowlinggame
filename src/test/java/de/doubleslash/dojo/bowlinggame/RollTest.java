@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 public class RollTest {
 
     @Test
-    public void testRoll() throws Exception {
+    public void testRoll() {
         Roll roll = new Roll(5, 1);
         assertThat(roll.getRollNumber(), is(1));
         assertThat(roll.getPins(), is(5));
@@ -21,12 +21,13 @@ public class RollTest {
     }
 
     @Test
-    public void testEquals() throws Exception {
+    public void testEquals() {
         assertThat(new Roll(1, 1), not(equalTo(new Roll(1, 2))));
+        assertThat(new Roll(4, 3), is(equalTo(new Roll(4, 3))));
     }
 
     @Test
-    public void testToString() throws Exception {
+    public void testToString() {
         Roll roll = new Roll(9, 3);
         assertThat(roll.toString(), is(equalTo("Roll{" + "rollNumber=3, pins=9}")));
     }

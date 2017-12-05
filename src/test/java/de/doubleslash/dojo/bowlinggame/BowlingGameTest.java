@@ -11,26 +11,26 @@ public class BowlingGameTest {
     private BowlingGame bowlingGame;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         bowlingGame = new BowlingGame();
     }
 
     @Test
-    public void testNoHits() throws Exception {
+    public void testNoHits() {
         rollMany(20, 0);
 
         assertScoreIs(0);
     }
 
     @Test
-    public void testNoSpareNoStrike() throws Exception {
+    public void testNoSpareNoStrike() {
         rollMany(20, 4);
 
         assertScoreIs(80);
     }
 
     @Test
-    public void testWithSpare() throws Exception {
+    public void testWithSpare() {
         // spare
         bowlingGame.roll(4);
         bowlingGame.roll(6);
@@ -44,7 +44,7 @@ public class BowlingGameTest {
     }
 
     @Test
-    public void testWithSpareInLastFrame() throws Exception {
+    public void testWithSpareInLastFrame() {
         rollMany(18, 1);
 
         bowlingGame.roll(3);
@@ -55,7 +55,7 @@ public class BowlingGameTest {
     }
 
     @Test
-    public void testWithStrike() throws Exception {
+    public void testWithStrike() {
         // strike
         bowlingGame.roll(10);
 
@@ -71,7 +71,7 @@ public class BowlingGameTest {
     }
 
     @Test
-    public void testWithTwoStrikes() throws Exception {
+    public void testWithTwoStrikes() {
         bowlingGame.roll(3);
         bowlingGame.roll(5);
 
@@ -90,10 +90,10 @@ public class BowlingGameTest {
     }
 
     @Test
-    public void testPerfectGame() throws Exception {
+    public void testPerfectGame() {
         rollMany(12, 10);
 
-        assertThat(bowlingGame.score(), is(300));
+        assertScoreIs(300);
     }
 
     private void assertScoreIs(int expectedScore) {
